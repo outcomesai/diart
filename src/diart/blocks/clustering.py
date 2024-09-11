@@ -116,6 +116,16 @@ class OnlineSpeakerClustering:
         self.active_centers.add(center)
         return center
 
+    def get_speaker_id_to_centroid_mapping(self) -> dict[int, np.ndarray]:
+        """Returns the mapping of speaker IDs to their centroids."""
+        if self.centers is None:
+            return {}
+
+        speaker_id_to_centroid = {}
+        for g_spk in self.active_centers:
+            speaker_id_to_centroid[g_spk] = self.centers[g_spk].tolist()
+        return speaker_id_to_centroid
+
     def identify(
         self, segmentation: SlidingWindowFeature, embeddings: torch.Tensor
     ) -> SpeakerMap:

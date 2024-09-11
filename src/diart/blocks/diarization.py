@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Sequence
+from typing import Sequence, Dict
 
 import numpy as np
 import torch
@@ -156,7 +156,7 @@ class SpeakerDiarization(base.Pipeline):
 
     def __call__(
         self, waveforms: Sequence[SlidingWindowFeature]
-    ) -> Sequence[tuple[Annotation, SlidingWindowFeature]]:
+    ) -> Sequence[tuple[Annotation, SlidingWindowFeature, Dict]]:
         """Diarize the next audio chunks of an audio stream.
 
         Parameters
@@ -224,7 +224,8 @@ class SpeakerDiarization(base.Pipeline):
                     shifted_agg_prediction[new_segment, track] = speaker
                 agg_prediction = shifted_agg_prediction
 
-            outputs.append((agg_prediction, agg_waveform))
+            speaker_id_to_centroid_mapping = self.clustering.get_speaker_id_to_centroid_mapping()
+            outputs.append((agg_prediction, agg_waveform, speaker_id_to_centroid_mapping))
 
             # Make place for new chunks in buffer if required
             if len(self.chunk_buffer) == self.pred_aggregation.num_overlapping_windows:

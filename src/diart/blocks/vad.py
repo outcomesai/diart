@@ -35,9 +35,9 @@ class VoiceActivityDetectionConfig(base.PipelineConfig):
         sample_rate: int = 16000,
         **kwargs,
     ):
-        # Default segmentation model is pyannote/segmentation
+        # Default segmentation model is pyannote/segmentation-3.0
         self.segmentation = segmentation or m.SegmentationModel.from_pyannote(
-            "pyannote/segmentation"
+            "pyannote/segmentation-3.0"
         )
 
         self._duration = duration
